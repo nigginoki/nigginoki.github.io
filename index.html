@@ -1,25 +1,24 @@
 <!DOCTYPE html>
-<html lang="de">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>Hello, world.</title>
+    <title>My Personal Blog</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'Helvetica', sans-serif;
             margin: 0;
             padding: 0;
             display: flex;
             flex-direction: row;
-            min-height: 100vh;
-            background-color: #f4f4f4;
+            background-color: #f9f9f9;
         }
 
         /* Header Style */
         header {
             width: 100%;
-            background-color: #2ecc71;
+            background-color: #34495e;
             color: white;
             padding: 1rem;
             text-align: center;
@@ -27,6 +26,7 @@
             top: 0;
             left: 0;
             z-index: 1;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
         }
 
         header img {
@@ -38,13 +38,13 @@
             display: inline-block;
             margin: 0;
             padding-left: 20px;
-            font-size: 2rem;
+            font-size: 2.5rem;
         }
 
         /* Sidebar Style */
         .sidebar {
             width: 250px;
-            background-color: #7dcea0;
+            background-color: #2c3e50;
             position: fixed;
             top: 80px;
             left: 0;
@@ -53,58 +53,77 @@
             display: flex;
             flex-direction: column;
             text-align: center;
+            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
         }
 
         .sidebar button {
-            background-color: #777;
+            background-color: #34495e;
             color: white;
             border: none;
             padding: 15px;
             margin: 10px;
             cursor: pointer;
-            font-size: 1rem;
+            font-size: 1.2rem;
             width: 80%;
             align-self: center;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
         }
 
         .sidebar button:hover {
-            background-color: #888;
+            background-color: #1abc9c;
         }
 
         /* Main Content */
         .main-content {
             margin-left: 250px;
-            padding-top: 100px;
-            padding-left: 20px;
-            padding-right: 20px;
+            padding: 100px 40px 20px 40px;
             flex-grow: 1;
-            text-align: center;
+            background-color: #ecf0f1;
+            box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.1);
         }
 
         h2 {
-            font-size: 2.5rem;
-            margin-bottom: 1rem;
+            font-size: 2rem;
+            margin-bottom: 1.5rem;
+            color: #2c3e50;
         }
 
         p {
-            font-size: 1.25rem;
-            max-width: 600px;
+            font-size: 1.2rem;
+            max-width: 800px;
             margin: 0 auto 2rem;
+            line-height: 1.6;
+            color: #7f8c8d;
         }
 
-        /* Button Style for Clicker Game */
+        .blog-post {
+            background-color: white;
+            padding: 20px;
+            margin-bottom: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Clicker Game Style */
         #clickerButton {
             padding: 20px;
             font-size: 1.5rem;
-            background-color: #4CAF50;
+            background-color: #e74c3c;
             color: white;
             border: none;
             border-radius: 10px;
             cursor: pointer;
+            transition: background-color 0.3s ease;
         }
 
         #clickerButton:hover {
-            background-color: #45a049;
+            background-color: #c0392b;
+        }
+
+        #score {
+            font-size: 1.5rem;
+            color: #2c3e50;
         }
     </style>
 </head>
@@ -112,33 +131,32 @@
 
     <!-- Header -->
     <header>
-        <img src="dein-bild.png" alt="Logo" />
-        <h1>Meine Statische Website</h1>
+        <img src="your-logo.png" alt="Logo" />
+        <h1>My Personal Blog</h1>
     </header>
 
     <!-- Sidebar -->
     <div class="sidebar">
-        <button onclick="showSection('home')">Startseite</button>
-        <button onclick="showSection('clicker')">Clicker-Spiel</button>
-        <!-- Weitere Schaltflächen -->
+        <button onclick="showSection('home')">Home</button>
+        <button onclick="showSection('clicker')">Clicker Game</button>
+        <!-- Add more sections as needed -->
     </div>
 
     <!-- Main Content -->
     <div class="main-content">
-        <div id="home">
-            <h2>Hello, world.</h2>
+        <div id="home" class="blog-post">
+            <h2>Hello, world!</h2>
             <p>
-                Willkommen auf meiner statischen Website! Dies ist ein Platzhaltertext, der später durch echte Inhalte ersetzt wird.
-                Hier kannst du Informationen über meine Projekte, meinen Werdegang oder andere interessante Themen finden.
-                Bleib gespannt auf Updates und mehr Inhalte in der nahen Zukunft!
+                Welcome to my static website blog! This is a placeholder text that will be replaced with real content later.
+                You can find updates about my projects, personal journey, and other interesting topics here. Stay tuned for more content and updates!
             </p>
         </div>
 
-        <div id="clicker" style="display: none;">
-            <h2>Clicker-Spiel</h2>
-            <p>Klicke so oft du kannst!</p>
-            <button id="clickerButton" onclick="incrementScore()">Klick mich!</button>
-            <p id="score">Punkte: 0</p>
+        <div id="clicker" class="blog-post" style="display: none;">
+            <h2>Clicker Game</h2>
+            <p>Click the button as fast as you can!</p>
+            <button id="clickerButton" onclick="incrementScore()">Click me!</button>
+            <p id="score">Score: 0</p>
         </div>
     </div>
 
@@ -147,15 +165,15 @@
 
         function incrementScore() {
             score++;
-            document.getElementById('score').innerText = 'Punkte: ' + score;
+            document.getElementById('score').innerText = 'Score: ' + score;
         }
 
         function showSection(sectionId) {
-            // Alle Sektionen verstecken
+            // Hide all sections
             document.getElementById('home').style.display = 'none';
             document.getElementById('clicker').style.display = 'none';
 
-            // Die ausgewählte Sektion anzeigen
+            // Show the selected section
             document.getElementById(sectionId).style.display = 'block';
         }
     </script>
