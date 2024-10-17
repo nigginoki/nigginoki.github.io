@@ -38,5 +38,19 @@
         Hier kannst du Informationen über meine Projekte, meinen Werdegang oder andere interessante Themen finden.
         Bleib gespannt auf Updates und mehr Inhalte in der nahen Zukunft!
     </p>
+<h1>Clicker-Spiel</h1>
+    <p>Klicke so oft du kannst!</p>
+    <button id="clickerButton" onclick="incrementScore()">Klick mich!</button>
+    <p id="score">Punkte: 0</p>
+
+    <script>
+        let score = 0;
+
+        function incrementScore() {
+            score++;
+            document.getElementById('score').innerText = 'Punkte: ' + score;
+        }
+    </script>
+    
 </body>
 </html>
