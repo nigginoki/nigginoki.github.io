@@ -127,11 +127,6 @@
             background-color: #c0392b;
         }
 
-        #score {
-            font-size: 1.5rem;
-            color: #2c3e50;
-        }
-
         /* Link Button */
         .link-button {
             background-color: #2980b9;
@@ -149,6 +144,35 @@
         .link-button:hover {
             background-color: #3498db;
         }
+
+        /* Input styles */
+        input[type="text"], input[type="number"] {
+            width: 80%;
+            padding: 10px;
+            margin: 10px auto;
+            border-radius: 5px;
+            border: 1px solid #bdc3c7;
+            font-size: 1rem;
+        }
+
+        /* Result styles */
+        #result, #teamResult {
+            margin: 10px 0;
+            padding: 10px;
+            background-color: #ecf0f1;
+            border-radius: 5px;
+            border: 1px solid #bdc3c7;
+            text-align: center;
+            font-size: 1.2rem;
+            color: #2c3e50;
+        }
+
+        /* Team Builder Styles */
+        .team-builder {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
     </style>
 </head>
 <body>
@@ -163,8 +187,8 @@
     <div class="sidebar">
         <button onclick="showSection('home')">Home</button>
         <button onclick="showSection('clicker')">Clicker Game</button>
-        <button onclick="showSection('number')">Number Guessing Game</button>
-        <button onclick="showSection('rockPaperScissors')">Rock, Paper, Scissors</button>
+        <button onclick="showSection('number')">Random Number Generator</button>
+        <button onclick="showSection('teamBuilder')">Team Builder</button>
         <button onclick="showSection('links')">Links</button>
     </div>
 
@@ -189,20 +213,20 @@
         </div>
 
         <div id="number" class="blog-post" style="display: none;">
-            <h2>Number Guessing Game</h2>
-            <p>Guess a number between 1 and 100!</p>
-            <input type="number" id="guessInput" placeholder="Enter your guess" />
-            <button class="game-button" onclick="checkGuess()">Guess!</button>
-            <p id="guessResult"></p>
+            <h2>Random Number Generator</h2>
+            <input type="number" id="numberInput" placeholder="Enter the maximum number" min="1"/>
+            <button class="game-button" onclick="generateRandomNumber()">Generate Random Number</button>
+            <div id="result"></div>
         </div>
 
-        <div id="rockPaperScissors" class="blog-post" style="display: none;">
-            <h2>Rock, Paper, Scissors</h2>
-            <p>Choose your move!</p>
-            <button class="game-button" onclick="playGame('rock')">Rock</button>
-            <button class="game-button" onclick="playGame('paper')">Paper</button>
-            <button class="game-button" onclick="playGame('scissors')">Scissors</button>
-            <p id="gameResult"></p>
+        <div id="teamBuilder" class="blog-post" style="display: none;">
+            <h2>Team Builder</h2>
+            <div class="team-builder">
+                <input type="text" id="nameInput" placeholder="Enter names (comma separated)" />
+                <input type="number" id="groupCount" placeholder="Enter number of groups" min="1" />
+                <button class="game-button" onclick="buildTeams()">Create Teams</button>
+                <div id="teamResult"></div>
+            </div>
         </div>
 
         <div id="links" class="blog-post" style="display: none;">
@@ -221,41 +245,42 @@
             document.getElementById('score').innerText = 'Score: ' + score;
         }
 
-        // Number Guessing Game
-        let targetNumber = Math.floor(Math.random() * 100) + 1;
-
-        function checkGuess() {
-            const guess = parseInt(document.getElementById('guessInput').value);
-            const result = document.getElementById('guessResult');
-            if (guess === targetNumber) {
-                result.innerText = 'Correct! The number was ' + targetNumber + '.';
-                targetNumber = Math.floor(Math.random() * 100) + 1; // Generate a new number
-            } else if (guess < targetNumber) {
-                result.innerText = 'Too low! Try again.';
+        // Random Number Generator
+        function generateRandomNumber() {
+            const max = parseInt(document.getElementById('numberInput').value);
+            if (max > 0) {
+                const randomNumber = Math.floor(Math.random() * max) + 1;
+                document.getElementById('result').innerText = 'Random Number: ' + randomNumber;
             } else {
-                result.innerText = 'Too high! Try again.';
+                document.getElementById('result').innerText = 'Please enter a valid number.';
             }
         }
 
-        // Rock, Paper, Scissors Game
-        function playGame(playerChoice) {
-            const choices = ['rock', 'paper', 'scissors'];
-            const computerChoice = choices[Math.floor(Math.random() * choices.length)];
-            let result = '';
+        // Team Builder
+        function buildTeams() {
+            const namesInput = document.getElementById('nameInput').value;
+            const groupCount = parseInt(document.getElementById('groupCount').value);
+            const names = namesInput.split(',').map(name => name.trim()).filter(name => name);
+            const teams = {};
 
-            if (playerChoice === computerChoice) {
-                result = "It's a draw!";
-            } else if (
-                (playerChoice === 'rock' && computerChoice === 'scissors') ||
-                (playerChoice === 'paper' && computerChoice === 'rock') ||
-                (playerChoice === 'scissors' && computerChoice === 'paper')
-            ) {
-                result = 'You win!';
-            } else {
-                result = 'You lose!';
+            if (names.length === 0 || groupCount <= 0) {
+                document.getElementById('teamResult').innerText = 'Please enter valid names and group count.';
+                return;
             }
 
-            document.getElementById('gameResult').innerText = `You chose ${playerChoice}. Computer chose ${computerChoice}. ${result}`;
+            for (let i = 0; i < names.length; i++) {
+                const teamIndex = i % groupCount;
+                if (!teams[teamIndex]) {
+                    teams[teamIndex] = [];
+                }
+                teams[teamIndex].push(names[i]);
+            }
+
+            let resultText = 'Teams:\n';
+            for (const [team, members] of Object.entries(teams)) {
+                resultText += `Group ${parseInt(team) + 1}: ${members.join(', ')}\n`;
+            }
+            document.getElementById('teamResult').innerText = resultText;
         }
 
         function showSection(sectionId) {
@@ -263,7 +288,7 @@
             document.getElementById('home').style.display = 'none';
             document.getElementById('clicker').style.display = 'none';
             document.getElementById('number').style.display = 'none';
-            document.getElementById('rockPaperScissors').style.display = 'none';
+            document.getElementById('teamBuilder').style.display = 'none';
             document.getElementById('links').style.display = 'none';
 
             // Show the selected section
