@@ -146,7 +146,7 @@
         }
 
         /* Input styles */
-        input[type="text"], input[type="number"] {
+        input[type="text"], input[type="number"], input[type="color"] {
             width: 80%;
             padding: 10px;
             margin: 10px auto;
@@ -156,7 +156,7 @@
         }
 
         /* Result styles */
-        #result, #teamResult {
+        #result, #teamResult, #quizResult, #timerResult, #todoResult {
             margin: 10px 0;
             padding: 10px;
             background-color: #ecf0f1;
@@ -169,6 +169,19 @@
 
         /* Team Builder Styles */
         .team-builder {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        /* Additional styles */
+        .timer-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .todo-container {
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -189,6 +202,16 @@
         <button onclick="showSection('clicker')">Clicker Game</button>
         <button onclick="showSection('number')">Random Number Generator</button>
         <button onclick="showSection('teamBuilder')">Team Builder</button>
+        <button onclick="showSection('quiz')">Trivia Quiz</button>
+        <button onclick="showSection('todo')">To-Do List</button>
+        <button onclick="showSection('timer')">Timer</button>
+        <button onclick="showSection('colorPicker')">Color Picker</button>
+        <button onclick="showSection('unitConverter')">Unit Converter</button>
+        <button onclick="showSection('weather')">Weather Display</button>
+        <button onclick="showSection('quote')">Random Quote</button>
+        <button onclick="showSection('music')">Background Music</button>
+        <button onclick="showSection('emojiTranslator')">Emoji Translator</button>
+        <button onclick="showSection('markdown')">Markdown Previewer</button>
         <button onclick="showSection('links')">Links</button>
     </div>
 
@@ -227,6 +250,75 @@
                 <button class="game-button" onclick="buildTeams()">Create Teams</button>
                 <div id="teamResult"></div>
             </div>
+        </div>
+
+        <div id="quiz" class="blog-post" style="display: none;">
+            <h2>Trivia Quiz</h2>
+            <p>Test your knowledge!</p>
+            <div id="quizQuestions"></div>
+            <button class="game-button" onclick="submitQuiz()">Submit Answers</button>
+            <div id="quizResult"></div>
+        </div>
+
+        <div id="todo" class="blog-post" style="display: none;">
+            <h2>To-Do List</h2>
+            <div class="todo-container">
+                <input type="text" id="todoInput" placeholder="Add a new task" />
+                <button class="game-button" onclick="addTask()">Add Task</button>
+                <ul id="todoList"></ul>
+            </div>
+        </div>
+
+        <div id="timer" class="blog-post" style="display: none;">
+            <h2>Timer</h2>
+            <div class="timer-container">
+                <input type="number" id="timerInput" placeholder="Enter time in seconds" min="1" />
+                <button class="game-button" onclick="startTimer()">Start Timer</button>
+                <div id="timerResult"></div>
+            </div>
+        </div>
+
+        <div id="colorPicker" class="blog-post" style="display: none;">
+            <h2>Color Picker</h2>
+            <input type="color" id="colorInput" onchange="changeBackgroundColor()" />
+        </div>
+
+        <div id="unitConverter" class="blog-post" style="display: none;">
+            <h2>Unit Converter</h2>
+            <input type="number" id="kmInput" placeholder="Kilometers" />
+            <button class="game-button" onclick="convertToMiles()">Convert to Miles</button>
+            <div id="unitResult"></div>
+        </div>
+
+        <div id="weather" class="blog-post" style="display: none;">
+            <h2>Weather Display</h2>
+            <input type="text" id="cityInput" placeholder="Enter city name" />
+            <button class="game-button" onclick="getWeather()">Get Weather</button>
+            <div id="weatherResult"></div>
+        </div>
+
+        <div id="quote" class="blog-post" style="display: none;">
+            <h2>Random Quote</h2>
+            <button class="game-button" onclick="generateQuote()">Get Quote</button>
+            <div id="quoteResult"></div>
+        </div>
+
+        <div id="music" class="blog-post" style="display: none;">
+            <h2>Background Music</h2>
+            <button class="game-button" onclick="toggleMusic()">Play/Pause Music</button>
+        </div>
+
+        <div id="emojiTranslator" class="blog-post" style="display: none;">
+            <h2>Emoji Translator</h2>
+            <input type="text" id="emojiInput" placeholder="Enter text to translate to emojis" />
+            <button class="game-button" onclick="translateToEmoji()">Translate</button>
+            <div id="emojiResult"></div>
+        </div>
+
+        <div id="markdown" class="blog-post" style="display: none;">
+            <h2>Markdown Previewer</h2>
+            <textarea id="markdownInput" rows="10" cols="30" placeholder="Enter Markdown text here"></textarea>
+            <div id="markdownPreview"></div>
         </div>
 
         <div id="links" class="blog-post" style="display: none;">
@@ -283,16 +375,174 @@
             document.getElementById('teamResult').innerText = resultText;
         }
 
+        // Trivia Quiz
+        const quizQuestions = [
+            { question: "What is the capital of France?", options: ["Paris", "London", "Berlin", "Madrid"], answer: 0 },
+            { question: "What is 2 + 2?", options: ["3", "4", "5", "6"], answer: 1 },
+            { question: "What is the largest planet?", options: ["Earth", "Jupiter", "Mars", "Saturn"], answer: 1 }
+        ];
+
+        function displayQuiz() {
+            const quizContainer = document.getElementById('quizQuestions');
+            quizContainer.innerHTML = '';
+            quizQuestions.forEach((q, index) => {
+                const questionHtml = `<p>${index + 1}. ${q.question}</p>`;
+                const optionsHtml = q.options.map((option, i) => `
+                    <label>
+                        <input type="radio" name="q${index}" value="${i}"> ${option}
+                    </label>
+                `).join('');
+                quizContainer.innerHTML += questionHtml + optionsHtml;
+            });
+        }
+
+        function submitQuiz() {
+            let score = 0;
+            quizQuestions.forEach((q, index) => {
+                const selectedOption = document.querySelector(`input[name="q${index}"]:checked`);
+                if (selectedOption && parseInt(selectedOption.value) === q.answer) {
+                    score++;
+                }
+            });
+            document.getElementById('quizResult').innerText = `Your score: ${score} out of ${quizQuestions.length}`;
+        }
+
+        // To-Do List
+        function addTask() {
+            const taskInput = document.getElementById('todoInput');
+            const task = taskInput.value.trim();
+            if (task) {
+                const li = document.createElement('li');
+                li.textContent = task;
+                document.getElementById('todoList').appendChild(li);
+                taskInput.value = '';
+            }
+        }
+
+        // Timer
+        let timerInterval;
+
+        function startTimer() {
+            const time = parseInt(document.getElementById('timerInput').value);
+            let remainingTime = time;
+            if (isNaN(remainingTime) || remainingTime <= 0) {
+                alert('Please enter a valid time in seconds.');
+                return;
+            }
+            document.getElementById('timerResult').innerText = `Time remaining: ${remainingTime} seconds`;
+            clearInterval(timerInterval);
+            timerInterval = setInterval(() => {
+                remainingTime--;
+                document.getElementById('timerResult').innerText = `Time remaining: ${remainingTime} seconds`;
+                if (remainingTime <= 0) {
+                    clearInterval(timerInterval);
+                    alert('Time is up!');
+                }
+            }, 1000);
+        }
+
+        // Color Picker
+        function changeBackgroundColor() {
+            const color = document.getElementById('colorInput').value;
+            document.body.style.backgroundColor = color;
+        }
+
+        // Unit Converter
+        function convertToMiles() {
+            const kilometers = parseFloat(document.getElementById('kmInput').value);
+            if (!isNaN(kilometers)) {
+                const miles = kilometers * 0.621371;
+                document.getElementById('unitResult').innerText = `${kilometers} kilometers is equal to ${miles.toFixed(2)} miles.`;
+            } else {
+                document.getElementById('unitResult').innerText = 'Please enter a valid number.';
+            }
+        }
+
+        // Weather Display
+        function getWeather() {
+            const city = document.getElementById('cityInput').value;
+            // Placeholder: Implement your weather API call here
+            document.getElementById('weatherResult').innerText = `Weather information for ${city} (API integration required)`;
+        }
+
+        // Random Quote
+        function generateQuote() {
+            const quotes = [
+                "Believe you can and you're halfway there.",
+                "The only limit to our realization of tomorrow is our doubts of today.",
+                "Do not wait to strike till the iron is hot, but make it hot by striking.",
+                "Act as if what you do makes a difference. It does.",
+                "Success is not final, failure is not fatal: It is the courage to continue that counts."
+            ];
+            const randomQuote = quotes[Math.floor(Math.random() * quotes.length)];
+            document.getElementById('quoteResult').innerText = randomQuote;
+        }
+
+        // Background Music
+        let musicPlaying = false;
+        const audio = new Audio('your-music-file.mp3'); // Replace with your music file
+
+        function toggleMusic() {
+            if (musicPlaying) {
+                audio.pause();
+            } else {
+                audio.play();
+            }
+            musicPlaying = !musicPlaying;
+        }
+
+        // Emoji Translator
+        function translateToEmoji() {
+            const emojiInput = document.getElementById('emojiInput').value;
+            const emojiMapping = {
+                "smile": "😄",
+                "sad": "😢",
+                "heart": "❤️",
+                "star": "⭐",
+                "thumbs up": "👍"
+            };
+            const translatedText = emojiInput.split(' ').map(word => emojiMapping[word] || word).join(' ');
+            document.getElementById('emojiResult').innerText = translatedText;
+        }
+
+        // Markdown Previewer
+        function updateMarkdownPreview() {
+            const markdownInput = document.getElementById('markdownInput').value;
+            // Simple Markdown to HTML conversion
+            const html = markdownInput
+                .replace(/(#+)\s*(.+)/g, (_, hashes, title) => `<h${hashes.length}>${title}</h${hashes.length}>`) // Headers
+                .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>') // Bold
+                .replace(/\*(.+?)\*/g, '<em>$1</em>'); // Italics
+            document.getElementById('markdownPreview').innerHTML = html;
+        }
+
+        document.getElementById('markdownInput').addEventListener('input', updateMarkdownPreview);
+
         function showSection(sectionId) {
             // Hide all sections
             document.getElementById('home').style.display = 'none';
             document.getElementById('clicker').style.display = 'none';
             document.getElementById('number').style.display = 'none';
             document.getElementById('teamBuilder').style.display = 'none';
+            document.getElementById('quiz').style.display = 'none';
+            document.getElementById('todo').style.display = 'none';
+            document.getElementById('timer').style.display = 'none';
+            document.getElementById('colorPicker').style.display = 'none';
+            document.getElementById('unitConverter').style.display = 'none';
+            document.getElementById('weather').style.display = 'none';
+            document.getElementById('quote').style.display = 'none';
+            document.getElementById('music').style.display = 'none';
+            document.getElementById('emojiTranslator').style.display = 'none';
+            document.getElementById('markdown').style.display = 'none';
             document.getElementById('links').style.display = 'none';
 
             // Show the selected section
             document.getElementById(sectionId).style.display = 'block';
+
+            // Load the quiz when the section is shown
+            if (sectionId === 'quiz') {
+                displayQuiz();
+            }
         }
     </script>
 
