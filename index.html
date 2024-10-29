@@ -1,538 +1,91 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Interactive Fun Zone</title>
-    <style>
-        body {
-            font-family: 'Helvetica Neue', sans-serif;
-            background: linear-gradient(135deg, #f0f8ff, #e6f7ff);
-            color: #333;
-            margin: 0;
-            padding: 0;
-            display: flex;
-            flex-direction: row;
-            transition: background 0.5s ease;
-        }
+/* General Styles */
+body {
+    font-family: Arial, sans-serif;
+    display: flex;
+    min-height: 100vh;
+    margin: 0;
+    color: #333;
+    background: linear-gradient(135deg, #a8e063, #56ab2f); /* Light green and blue tones */
+}
 
-        /* Header */
-        header {
-            width: 100%;
-            background: linear-gradient(135deg, #81c784, #aed581);
-            color: white;
-            padding: 1rem;
-            text-align: center;
-            position: fixed;
-            top: 0;
-            left: 0;
-            z-index: 1;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-            border-bottom-left-radius: 40px;
-            border-bottom-right-radius: 40px;
-        }
+/* Header */
+header {
+    text-align: center;
+    padding: 2rem;
+    color: white;
+    background: linear-gradient(135deg, #11998e, #38ef7d); /* soothing green gradient */
+    border-bottom-left-radius: 40px;
+    border-bottom-right-radius: 40px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
 
-        header h1 {
-            margin: 0;
-            font-size: 2.2rem;
-            flex-grow: 1;
-            font-weight: 600;
-        }
+header h1 {
+    font-size: 2.5rem;
+    margin: 0;
+}
 
-        /* Sidebar */
-        .sidebar {
-            width: 240px;
-            background-color: #f9fbe7;
-            position: fixed;
-            top: 80px;
-            left: 0;
-            bottom: 0;
-            padding-top: 30px;
-            display: flex;
-            flex-direction: column;
-            text-align: center;
-            box-shadow: 2px 0 8px rgba(0, 0, 0, 0.1);
-            border-top-right-radius: 50px;
-            border-bottom-right-radius: 50px;
-        }
+header p {
+    font-size: 1.2rem;
+    margin-top: 0.5rem;
+}
 
-        .sidebar button {
-            background-color: #a5d6a7;
-            color: #333;
-            border: none;
-            padding: 15px;
-            margin: 10px 20px;
-            cursor: pointer;
-            font-size: 1.1rem;
-            border-radius: 30px;
-            transition: background-color 0.3s ease, transform 0.2s;
-        }
+/* Sidebar */
+.sidebar {
+    background: #85dcb0; /* light, comforting green */
+    padding: 2rem;
+    width: 200px;
+    border-top-right-radius: 20px;
+    border-bottom-right-radius: 20px;
+    box-shadow: 4px 0 8px rgba(0, 0, 0, 0.2);
+    display: flex;
+    flex-direction: column;
+}
 
-        .sidebar button:hover {
-            background-color: #81c784;
-            transform: translateY(-3px);
-        }
+.sidebar nav a {
+    color: #333;
+    padding: 1rem;
+    text-decoration: none;
+    margin: 0.5rem 0;
+    background: #b8e994;
+    border-radius: 10px;
+    text-align: center;
+    font-weight: bold;
+    transition: background 0.3s;
+}
 
-        /* Main Content */
-        .main-content {
-            margin-left: 250px;
-            padding: 120px 50px 20px 50px;
-            flex-grow: 1;
-            background: #ffffff;
-            box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.1);
-            border-radius: 30px;
-            transition: all 0.3s;
-        }
+.sidebar nav a:hover {
+    background: #66d3b9; /* subtle darker shade on hover */
+}
 
-        h2 {
-            font-size: 1.8rem;
-            color: #388e3c;
-            margin-bottom: 1rem;
-        }
+/* Main Content */
+main {
+    flex-grow: 1;
+    padding: 2rem;
+    margin-left: 220px;
+    background: white;
+    border-top-left-radius: 20px;
+    border-top-right-radius: 20px;
+    box-shadow: 0 -4px 8px rgba(0, 0, 0, 0.2);
+}
 
-        p {
-            font-size: 1.2rem;
-            line-height: 1.6;
-            color: #666;
-        }
+section {
+    margin-bottom: 2rem;
+}
 
-        .blog-post {
-            background-color: #f9fbe7;
-            padding: 20px;
-            margin-bottom: 30px;
-            border-radius: 20px;
-            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
-            transition: transform 0.2s;
-        }
+section h2 {
+    color: #38ef7d;
+}
 
-        .blog-post:hover {
-            transform: scale(1.02);
-        }
-
-        /* Button Styles */
-        .game-button, .link-button {
-            padding: 15px 30px;
-            font-size: 1.2rem;
-            border: none;
-            border-radius: 30px;
-            cursor: pointer;
-            color: white;
-            background: linear-gradient(135deg, #81c784, #aed581);
-            transition: transform 0.3s, background-color 0.3s;
-        }
-
-        .game-button:hover, .link-button:hover {
-            background: #4caf50;
-            transform: translateY(-3px);
-        }
-
-        /* Input Styles */
-        input[type="text"], input[type="number"] {
-            width: 80%;
-            padding: 12px;
-            margin: 12px auto;
-            border-radius: 20px;
-            border: 1px solid #ccc;
-            font-size: 1rem;
-            background: #f0f4c3;
-            color: #333;
-        }
-
-        input[type="text"]:focus, input[type="number"]:focus {
-            border-color: #81c784;
-            outline: none;
-        }
-
-        /* Result Box */
-        #result, #teamResult {
-            padding: 15px;
-            background-color: #f0f4c3;
-            border-radius: 15px;
-            font-size: 1.2rem;
-            text-align: center;
-            margin-top: 10px;
-            color: #388e3c;
-        }
-
-        @media (max-width: 768px) {
-            .main-content {
-                margin-left: 0;
-                padding: 90px 20px;
-            }
-
-            .sidebar {
-                width: 200px;
-                border-radius: 30px;
-            }
-
-            h1 {
-                font-size: 1.8rem;
-            }
-        }
-    </style>
-</head>
-
-
-<body>
-
-    <!-- Header -->
-    <header>
-        <img src="your-logo.png" alt="Logo" />
-        <h1>Hello, world.</h1>
-    </header>
-
-    <!-- Sidebar -->
-    <div class="sidebar">
-        <button onclick="showSection('home')">Home</button>
-        <button onclick="showSection('clicker')">Clicker Game</button>
-        <button onclick="showSection('number')">Random Number Generator</button>
-        <button onclick="showSection('teamBuilder')">Team Builder</button>
-        <button onclick="showSection('quiz')">Trivia Quiz</button>
-        <button onclick="showSection('todo')">To-Do List</button>
-        <button onclick="showSection('timer')">Timer</button>
-        <button onclick="showSection('colorPicker')">Color Picker</button>
-        <button onclick="showSection('unitConverter')">Unit Converter</button>
-        <button onclick="showSection('weather')">Weather Display</button>
-        <button onclick="showSection('quote')">Random Quote</button>
-        <button onclick="showSection('music')">Background Music</button>
-        <button onclick="showSection('emojiTranslator')">Emoji Translator</button>
-        <button onclick="showSection('markdown')">Markdown Previewer</button>
-        <button onclick="showSection('links')">Links</button>
-    </div>
-
-    <!-- Main Content -->
-    <div class="main-content">
-        <div id="home" class="blog-post">
-            <h2>Hello, world!</h2>
-            <p>
-                Welcome to my static website blog! This is a placeholder text that will be replaced with real content later.
-                You can find updates about my projects, personal journey, and other interesting topics here. Stay tuned for more content and updates!
-            </p>
-            <p>
-                Here, you will also find some fun games to play. Feel free to explore and enjoy!
-            </p>
-        </div>
-
-        <div id="clicker" class="blog-post" style="display: none;">
-            <h2>Clicker Game</h2>
-            <p>Click the button as fast as you can!</p>
-            <button class="game-button" id="clickerButton" onclick="incrementScore()">Click me!</button>
-            <p id="score">Score: 0</p>
-        </div>
-
-        <div id="number" class="blog-post" style="display: none;">
-            <h2>Random Number Generator</h2>
-            <input type="number" id="numberInput" placeholder="Enter the maximum number" min="1"/>
-            <button class="game-button" onclick="generateRandomNumber()">Generate Random Number</button>
-            <div id="result"></div>
-        </div>
-
-        <div id="teamBuilder" class="blog-post" style="display: none;">
-            <h2>Team Builder</h2>
-            <div class="team-builder">
-                <input type="text" id="nameInput" placeholder="Enter names (comma separated)" />
-                <input type="number" id="groupCount" placeholder="Enter number of groups" min="1" />
-                <button class="game-button" onclick="buildTeams()">Create Teams</button>
-                <div id="teamResult"></div>
-            </div>
-        </div>
-
-        <div id="quiz" class="blog-post" style="display: none;">
-            <h2>Trivia Quiz</h2>
-            <p>Test your knowledge!</p>
-            <div id="quizQuestions"></div>
-            <button class="game-button" onclick="submitQuiz()">Submit Answers</button>
-            <div id="quizResult"></div>
-        </div>
-
-        <div id="todo" class="blog-post" style="display: none;">
-            <h2>To-Do List</h2>
-            <div class="todo-container">
-                <input type="text" id="todoInput" placeholder="Add a new task" />
-                <button class="game-button" onclick="addTask()">Add Task</button>
-                <ul id="todoList"></ul>
-            </div>
-        </div>
-
-        <div id="timer" class="blog-post" style="display: none;">
-            <h2>Timer</h2>
-            <div class="timer-container">
-                <input type="number" id="timerInput" placeholder="Enter time in seconds" min="1" />
-                <button class="game-button" onclick="startTimer()">Start Timer</button>
-                <div id="timerResult"></div>
-            </div>
-        </div>
-
-        <div id="colorPicker" class="blog-post" style="display: none;">
-            <h2>Color Picker</h2>
-            <input type="color" id="colorInput" onchange="changeBackgroundColor()" />
-        </div>
-
-        <div id="unitConverter" class="blog-post" style="display: none;">
-            <h2>Unit Converter</h2>
-            <input type="number" id="kmInput" placeholder="Kilometers" />
-            <button class="game-button" onclick="convertToMiles()">Convert to Miles</button>
-            <div id="unitResult"></div>
-        </div>
-
-        <div id="weather" class="blog-post" style="display: none;">
-            <h2>Weather Display</h2>
-            <input type="text" id="cityInput" placeholder="Enter city name" />
-            <button class="game-button" onclick="getWeather()">Get Weather</button>
-            <div id="weatherResult"></div>
-        </div>
-
-        <div id="quote" class="blog-post" style="display: none;">
-            <h2>Random Quote</h2>
-            <button class="game-button" onclick="generateQuote()">Get Quote</button>
-            <div id="quoteResult"></div>
-        </div>
-
-        <div id="music" class="blog-post" style="display: none;">
-            <h2>Background Music</h2>
-            <button class="game-button" onclick="toggleMusic()">Play/Pause Music</button>
-        </div>
-
-        <div id="emojiTranslator" class="blog-post" style="display: none;">
-            <h2>Emoji Translator</h2>
-            <input type="text" id="emojiInput" placeholder="Enter text to translate to emojis" />
-            <button class="game-button" onclick="translateToEmoji()">Translate</button>
-            <div id="emojiResult"></div>
-        </div>
-
-        <div id="markdown" class="blog-post" style="display: none;">
-            <h2>Markdown Previewer</h2>
-            <textarea id="markdownInput" rows="10" cols="30" placeholder="Enter Markdown text here"></textarea>
-            <div id="markdownPreview"></div>
-        </div>
-
-        <div id="links" class="blog-post" style="display: none;">
-            <h2>Links to My Projects</h2>
-            <button class="link-button" onclick="alert('Add your link here!')">My GitHub Repository</button>
-            <button class="link-button" onclick="alert('Add your link here!')">My Portfolio</button>
-            <button class="link-button" onclick="alert('Add your link here!')">My Blog</button>
-        </div>
-    </div>
-
-    <script>
-        let score = 0;
-
-        function incrementScore() {
-            score++;
-            document.getElementById('score').innerText = 'Score: ' + score;
-        }
-
-        // Random Number Generator
-        function generateRandomNumber() {
-            const max = parseInt(document.getElementById('numberInput').value);
-            if (max > 0) {
-                const randomNumber = Math.floor(Math.random() * max) + 1;
-                document.getElementById('result').innerText = 'Random Number: ' + randomNumber;
-            } else {
-                document.getElementById('result').innerText = 'Please enter a valid number.';
-            }
-        }
-
-        // Team Builder
-        function buildTeams() {
-            const namesInput = document.getElementById('nameInput').value;
-            const groupCount = parseInt(document.getElementById('groupCount').value);
-            const names = namesInput.split(',').map(name => name.trim()).filter(name => name);
-            const teams = {};
-
-            if (names.length === 0 || groupCount <= 0) {
-                document.getElementById('teamResult').innerText = 'Please enter valid names and group count.';
-                return;
-            }
-
-            for (let i = 0; i < names.length; i++) {
-                const teamIndex = i % groupCount;
-                if (!teams[teamIndex]) {
-                    teams[teamIndex] = [];
-                }
-                teams[teamIndex].push(names[i]);
-            }
-
-            let resultText = 'Teams:\n';
-            for (const [team, members] of Object.entries(teams)) {
-                resultText += `Group ${parseInt(team) + 1}: ${members.join(', ')}\n`;
-            }
-            document.getElementById('teamResult').innerText = resultText;
-        }
-
-        // Trivia Quiz
-        const quizQuestions = [
-            { question: "What is the capital of France?", options: ["Paris", "London", "Berlin", "Madrid"], answer: 0 },
-            { question: "What is 2 + 2?", options: ["3", "4", "5", "6"], answer: 1 },
-            { question: "What is the largest planet?", options: ["Earth", "Jupiter", "Mars", "Saturn"], answer: 1 }
-        ];
-
-        function displayQuiz() {
-            const quizContainer = document.getElementById('quizQuestions');
-            quizContainer.innerHTML = '';
-            quizQuestions.forEach((q, index) => {
-                const questionHtml = `<p>${index + 1}. ${q.question}</p>`;
-                const optionsHtml = q.options.map((option, i) => `
-                    <label>
-                        <input type="radio" name="q${index}" value="${i}"> ${option}
-                    </label>
-                `).join('');
-                quizContainer.innerHTML += questionHtml + optionsHtml;
-            });
-        }
-
-        function submitQuiz() {
-            let score = 0;
-            quizQuestions.forEach((q, index) => {
-                const selectedOption = document.querySelector(`input[name="q${index}"]:checked`);
-                if (selectedOption && parseInt(selectedOption.value) === q.answer) {
-                    score++;
-                }
-            });
-            document.getElementById('quizResult').innerText = `Your score: ${score} out of ${quizQuestions.length}`;
-        }
-
-        // To-Do List
-        function addTask() {
-            const taskInput = document.getElementById('todoInput');
-            const task = taskInput.value.trim();
-            if (task) {
-                const li = document.createElement('li');
-                li.textContent = task;
-                document.getElementById('todoList').appendChild(li);
-                taskInput.value = '';
-            }
-        }
-
-        // Timer
-        let timerInterval;
-
-        function startTimer() {
-            const time = parseInt(document.getElementById('timerInput').value);
-            let remainingTime = time;
-            if (isNaN(remainingTime) || remainingTime <= 0) {
-                alert('Please enter a valid time in seconds.');
-                return;
-            }
-            document.getElementById('timerResult').innerText = `Time remaining: ${remainingTime} seconds`;
-            clearInterval(timerInterval);
-            timerInterval = setInterval(() => {
-                remainingTime--;
-                document.getElementById('timerResult').innerText = `Time remaining: ${remainingTime} seconds`;
-                if (remainingTime <= 0) {
-                    clearInterval(timerInterval);
-                    alert('Time is up!');
-                }
-            }, 1000);
-        }
-
-        // Color Picker
-        function changeBackgroundColor() {
-            const color = document.getElementById('colorInput').value;
-            document.body.style.backgroundColor = color;
-        }
-
-        // Unit Converter
-        function convertToMiles() {
-            const kilometers = parseFloat(document.getElementById('kmInput').value);
-            if (!isNaN(kilometers)) {
-                const miles = kilometers * 0.621371;
-                document.getElementById('unitResult').innerText = `${kilometers} kilometers is equal to ${miles.toFixed(2)} miles.`;
-            } else {
-                document.getElementById('unitResult').innerText = 'Please enter a valid number.';
-            }
-        }
-
-        // Weather Display
-        function getWeather() {
-            const city = document.getElementById('cityInput').value;
-            // Placeholder: Implement your weather API call here
-            document.getElementById('weatherResult').innerText = `Weather information for ${city} (API integration required)`;
-        }
-
-        // Random Quote
-        function generateQuote() {
-            const quotes = [
-                "Believe you can and you're halfway there.",
-                "The only limit to our realization of tomorrow is our doubts of today.",
-                "Do not wait to strike till the iron is hot, but make it hot by striking.",
-                "Act as if what you do makes a difference. It does.",
-                "Success is not final, failure is not fatal: It is the courage to continue that counts."
-            ];
-            const randomQuote = quotes[Math.floor(Math.random() * quotes.length)];
-            document.getElementById('quoteResult').innerText = randomQuote;
-        }
-
-        // Background Music
-        let musicPlaying = false;
-        const audio = new Audio('your-music-file.mp3'); // Replace with your music file
-
-        function toggleMusic() {
-            if (musicPlaying) {
-                audio.pause();
-            } else {
-                audio.play();
-            }
-            musicPlaying = !musicPlaying;
-        }
-
-        // Emoji Translator
-        function translateToEmoji() {
-            const emojiInput = document.getElementById('emojiInput').value;
-            const emojiMapping = {
-                "smile": "😄",
-                "sad": "😢",
-                "heart": "❤️",
-                "star": "⭐",
-                "thumbs up": "👍"
-            };
-            const translatedText = emojiInput.split(' ').map(word => emojiMapping[word] || word).join(' ');
-            document.getElementById('emojiResult').innerText = translatedText;
-        }
-
-        // Markdown Previewer
-        function updateMarkdownPreview() {
-            const markdownInput = document.getElementById('markdownInput').value;
-            // Simple Markdown to HTML conversion
-            const html = markdownInput
-                .replace(/(#+)\s*(.+)/g, (_, hashes, title) => `<h${hashes.length}>${title}</h${hashes.length}>`) // Headers
-                .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>') // Bold
-                .replace(/\*(.+?)\*/g, '<em>$1</em>'); // Italics
-            document.getElementById('markdownPreview').innerHTML = html;
-        }
-
-        document.getElementById('markdownInput').addEventListener('input', updateMarkdownPreview);
-
-        function showSection(sectionId) {
-            // Hide all sections
-            document.getElementById('home').style.display = 'none';
-            document.getElementById('clicker').style.display = 'none';
-            document.getElementById('number').style.display = 'none';
-            document.getElementById('teamBuilder').style.display = 'none';
-            document.getElementById('quiz').style.display = 'none';
-            document.getElementById('todo').style.display = 'none';
-            document.getElementById('timer').style.display = 'none';
-            document.getElementById('colorPicker').style.display = 'none';
-            document.getElementById('unitConverter').style.display = 'none';
-            document.getElementById('weather').style.display = 'none';
-            document.getElementById('quote').style.display = 'none';
-            document.getElementById('music').style.display = 'none';
-            document.getElementById('emojiTranslator').style.display = 'none';
-            document.getElementById('markdown').style.display = 'none';
-            document.getElementById('links').style.display = 'none';
-
-            // Show the selected section
-            document.getElementById(sectionId).style.display = 'block';
-
-            // Load the quiz when the section is shown
-            if (sectionId === 'quiz') {
-                displayQuiz();
-            }
-        }
-    </script>
-
-</body>
-</html>
+/* Footer */
+footer {
+    text-align: center;
+    padding: 1rem;
+    background: #11998e;
+    color: white;
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.2);
+    border-top-left-radius: 40px;
+    border-top-right-radius: 40px;
+}
